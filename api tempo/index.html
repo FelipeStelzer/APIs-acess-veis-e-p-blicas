@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo</title>
+</head>
+<body>
+    <h1>Previsão do Tempo</h1>
+    <label for="inputDados">Digite o nome da cidade:</label>
+    <input type="text" id="inputDados">
+    <button onclick="pegaDados()">Obter Previsão</button>
+    <div id="informacoes"></div>
+
+    <script>
+        function pegaDados() {
+            const city = document.getElementById('inputDados').value;
+            const apiChave = 'f46eeee8cd65128b83ac675dad77f63c'; // Substitua pela sua chave de API do OpenWeatherMap
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiChave}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Deu Ruim');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const divInfo = document.getElementById('informacoes');
+                    divInfo.innerHTML = `
+                        <h2>Previsão do Tempo para ${city}</h2>
+                        <p>Tempo: ${data.weather[0].description}</p>
+                        <p>Temperatura: ${data.main.temp} K</p>
+                        <p>Umidade: ${data.main.humidity}%</p>
+                        <p>Velocidade do Vento: ${data.wind.speed} m/s</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Erro ao obter previsão do tempo:', error);
+                    const divInfo = document.getElementById('weatherInfo');
+                    divInfo.innerHTML = '<p>Erro ao obter previsão do tempo. Por favor, tente novamente.</p>';
+                });
+        }
+    </script>
+</body>
+</html>
